@@ -69,7 +69,17 @@ export const ENUMS = {
   dependencyKind: { metric: '指标引用', field: '字段依赖', report: '报表引用' },
   trigger: { manual: '手动', schedule: '定时', seed: '初始化' },
   runStatus: { queued: '排队中', running: '执行中', success: '成功', partial: '部分成功', failed: '失败' },
+  findingType: { conflict: '口径冲突', cycle: '依赖环', parse_error: '解析失败' },
+  reconcileState: { new: '新增', resolved: '解除', continued: '延续' },
 };
+
+export function reconcileTone(state) {
+  return { new: 'high', resolved: 'ok', continued: 'pending' }[state] || 'info';
+}
+
+export function findingTone(type) {
+  return { conflict: 'warn', cycle: 'high', parse_error: 'danger' }[type] || 'info';
+}
 
 export function can(role, permission) {
   return (PERMISSIONS[role] || []).includes(permission);

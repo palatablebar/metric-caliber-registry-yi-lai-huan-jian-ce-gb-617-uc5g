@@ -23,6 +23,7 @@ def create_run(db: Session, payload: dict, principal: dict, request: Request) ->
         detail={"run_no": run.run_no, "issues": run.output_count},
         ip=request.client.host if request.client else None,
     )
+    reconciliation = (run.reconciliation or {}).get("counts") or {}
     audit_service.record(
         db,
         actor_email=principal["email"],
@@ -30,7 +31,13 @@ def create_run(db: Session, payload: dict, principal: dict, request: Request) ->
         action="run.complete",
         entity="run",
         entity_id=run.id,
-        detail={"status": run.status, "output": run.output_count},
+        detail={
+            "status": run.status,
+            "output": run.output_count,
+            "new": reconciliation.get("new"),
+            "resolved": reconciliation.get("resolved"),
+            "continued": reconciliation.get("continued"),
+        },
         ip=request.client.host if request.client else None,
     )
     db.commit()

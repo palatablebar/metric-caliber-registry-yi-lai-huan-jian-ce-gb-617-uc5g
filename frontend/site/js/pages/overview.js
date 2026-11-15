@@ -96,6 +96,14 @@ export const overviewPage = {
                     <dt>开始</dt><dd>${fmtTime(latest.started_at)}</dd>
                     <dt>输入</dt><dd>${esc(latest.input_count)} 条口径</dd>
                     <dt>问题</dt><dd>${esc(latest.output_count)} 条（冲突 + 环 + 解析失败）</dd>
+                    <dt>对账</dt><dd>${
+                      latest.reconciliation?.baseline_run_no
+                        ? `<span class="badge high">新增 ${esc(latest.reconciliation.counts.new ?? 0)}</span>
+                           <span class="badge ok">解除 ${esc(latest.reconciliation.counts.resolved ?? 0)}</span>
+                           <span class="badge pending">延续 ${esc(latest.reconciliation.counts.continued ?? 0)}</span>
+                           <div class="muted tiny" style="margin-top:4px">基线 <span class="mono">${esc(latest.reconciliation.baseline_run_no)}</span> · 问题清单见「变更单与导出」</div>`
+                        : '<span class="muted tiny">首份有结论运行，无对账基线</span>'
+                    }</dd>
                   </dl>
                   <hr class="hr" />
                   <div class="section-note">${esc(BRAND.subtitle)}</div>`

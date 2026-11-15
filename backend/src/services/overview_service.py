@@ -19,7 +19,7 @@ from src.models.change_request import ChangeRequest
 from src.models.metric import Metric
 from src.models.report import Report
 from src.models.run import Run
-from src.services import graph_service
+from src.services import finding_service, graph_service, run_service
 from src.utils.timeutil import local_now, utcnow
 
 
@@ -53,7 +53,7 @@ def overview(db: Session) -> dict:
     kind_counter: dict[str, int] = {}
     for item in summary["conflicts"]:
         kind_counter[item["kind"]] = kind_counter.get(item["kind"], 0) + 1
-    latest_run = db.scalar(select(Run).order_by(Run.id.desc()).limit(1))
+    latest_run = run_service.latest_conclusive_run(db)
 
     since = utcnow() - timedelta(days=7)
     recent_runs = db.scalars(select(Run).where(Run.started_at >= since)).all()
@@ -125,6 +125,8 @@ def overview(db: Session) -> dict:
                 "started_at": latest_run.started_at.isoformat(timespec="seconds") + "Z" if latest_run.started_at else None,
                 "output_count": latest_run.output_count,
                 "input_count": latest_run.input_count,
+                "findings": latest_run.findings or [],
+                "reconciliation": latest_run.reconciliation or finding_service.empty_reconciliation(),
             }
             if latest_run
             else None

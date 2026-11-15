@@ -49,3 +49,15 @@ def changes_csv(db: Session, principal: dict, request: Request) -> Response:
 
 def runs_csv(db: Session, principal: dict, request: Request) -> Response:
     return _respond(db, export_service.runs_csv(db), "runs.csv", "export.runs", "run", principal, request)
+
+
+def run_findings_csv(db: Session, principal: dict, request: Request) -> Response:
+    return _respond(
+        db,
+        export_service.run_findings_csv(db),
+        "run-findings.csv",
+        "export.run_findings",
+        "run",
+        principal,
+        request,
+    )

@@ -100,7 +100,9 @@ CREATE TABLE runs (
     operator_email  VARCHAR(160) NOT NULL,
     input_count     INTEGER      NOT NULL DEFAULT 0,
     output_count    INTEGER      NOT NULL DEFAULT 0,
-    metrics         JSON,
+    metrics         JSON,                                -- 统计汇总（边数/严重度/对账计数）
+    findings        JSON,                                -- 完整问题清单（冲突/环/解析失败，带稳定身份键）
+    reconciliation  JSON,                                -- 与上一份有结论运行的对账：新增/解除/延续
     log_text        TEXT,
     seed_key        VARCHAR(120) UNIQUE,
     started_at      TIMESTAMP    NOT NULL,

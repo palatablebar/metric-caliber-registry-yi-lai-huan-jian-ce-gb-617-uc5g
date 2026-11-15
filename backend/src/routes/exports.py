@@ -37,3 +37,10 @@ def runs_csv(
     request: Request, db: Session = Depends(get_db), principal: dict = Depends(require_roles(*EXPORT_ROLES))
 ):
     return export_controller.runs_csv(db, principal, request)
+
+
+@router.get("/run-findings.csv")
+def run_findings_csv(
+    request: Request, db: Session = Depends(get_db), principal: dict = Depends(require_roles(*EXPORT_ROLES))
+):
+    return export_controller.run_findings_csv(db, principal, request)
